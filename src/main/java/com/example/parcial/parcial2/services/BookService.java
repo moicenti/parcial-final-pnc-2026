@@ -76,8 +76,10 @@ public class BookService {
         Map<String, Long> countByGenre = new HashMap<>();
 
         for (Book book : books) {
-            String genreName = book.getGenre().name();
-            countByGenre.put(genreName, countByGenre.getOrDefault(genreName, 0L) + 1);
+            if(book.getGenre() != null){
+                String genreName = book.getGenre().name();
+                countByGenre.put(genreName, countByGenre.getOrDefault(genreName, 0L) + 1);
+            }
         }
 
         List<GenreCountDto> result = new ArrayList<>();

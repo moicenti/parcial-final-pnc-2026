@@ -52,7 +52,8 @@ Existe un endpoint que devuelve la cantidad de libros disponibles por género. S
 
 **Instrucción:** Explique la causa del problema y resuélvalo.
 
----
+--- El problema es que hay algunos libros con genero vacío y el metodo crashea al intentar obtener un nombre de un Genero nulo,
+se agrega una validación para que no se tomen en cuenta los Libros sin Género
 
 ### 4. Error al consultar un libro por ID (10%)
 
