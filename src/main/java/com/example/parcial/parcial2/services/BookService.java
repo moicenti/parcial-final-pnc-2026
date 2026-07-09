@@ -41,11 +41,11 @@ public class BookService {
 
     public List<Book> getAllBooks(String author, String genre) {
         if (author != null && genre != null) {
-            return bookRepository.findByAuthorAndGenre(genre, author);
+            return bookRepository.findByAuthorAndGenre(author, Genre.valueOf(genre.toUpperCase()));
         } else if (author != null) {
             return bookRepository.findByAuthor(author);
         } else if (genre != null) {
-            return bookRepository.findByGenre(Genre.valueOf(genre));
+            return bookRepository.findByGenre(Genre.valueOf(genre.toUpperCase()));
         }
         return bookRepository.findAll();
     }
@@ -82,6 +82,8 @@ public class BookService {
 
         List<GenreCountDto> result = new ArrayList<>();
         for (Map.Entry<String, Long> entry : countByGenre.entrySet()) {
+            System.out.println(entry.getKey());
+            System.out.println(entry.getValue());
             result.add(new GenreCountDto(entry.getKey(), entry.getValue()));
         }
 

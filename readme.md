@@ -1,4 +1,4 @@
-# [Nombre] [Carné]
+# [Moisés Marco Centi Zepeda] [00054123]
 
 ## Indicaciones
 
@@ -26,6 +26,12 @@ Actualmente:
 
 **Instrucción:** Explique la causa del problema y resuélvalo.
 
+Bookservice linea 44, dos cosas, primero los parametros se llaman en orden equivocado, primero debería ir el autor y luego el genero según
+el Repository. Segundo error, el metodo del repository debería buscar usando un Gender, no un string ya que JPA no puede buscar
+por genero si se manda un String por discrepancia entre los tipos, por eso el metodo solo de buscar genero funciona, pues
+busca utilizando un Gender, no un String, tambien para evitar problemas, se hizo que el genre se haga uppercase así evitar problemas
+con mayusculas y minusculas. 
+
 ---
 
 ### 2. Error al volver a prestar un libro (10%)
@@ -33,6 +39,10 @@ Actualmente:
 Un usuario reportó que al pedir prestado el libro **The Selfish Gene**, devolverlo e intentar pedirlo prestado nuevamente, el servidor falla.
 
 **Instrucción:** Explique la causa del problema y resuélvalo.
+
+Este error ocurre, pues en la función del servicio de movimientos, se contempla poner como no disponible en caso de que se hayan quedado
+sin copias, pero al devolver una copia el estado no se modifica como disponible de vuelta, por lo que si se acaban los libros el libro
+deja de estar disponible e independientente de que se retorne el estado seguirá apareciendo como no disponible
 
 ---
 
@@ -48,11 +58,17 @@ Existe un endpoint que devuelve la cantidad de libros disponibles por género. S
 
 Un miembro del equipo de frontend reporta que la siguiente llamada falla:
 
+
 ```http
 GET /books?id=ed16ed1e-7017-4697-a08a-d28c09a74acf
 ```
 
 **Instrucción:** Explique la causa del problema.
+
+Esta consulta está fallando porque el controller tiene la id como una PathVariable, en cambio lo están enviando como
+RequestParam , la forma correcta para realizar la petición es 
+GET /books/UUID 
+
 
 ---
 
@@ -73,7 +89,9 @@ QA ha reportado que el siguiente payload enviado al endpoint `POST /books` provo
 
 **Instrucción:** Explique la causa del problema.
 
----
+--- En el método de crear un libro, al momento de asignar el género toma directamente el genre y busca un Enum como ese string
+el problema de este payload, es que classic no encuentra un Enum, CLASSIC si lo hace entonces el payload debe tener los generos 
+en mayusculas o hacer que el service los fuerce a ser mayusculas.
 
 ### 6. Devolución de libros no prestados (20%)
 
@@ -86,3 +104,6 @@ QA ha reportado que un usuario es capaz de devolver libros que nunca ha solicita
 - Si no es posible, explique por qué, haciendo referencia al código correspondiente.
 
 ---
+El problema si es posible, ya que nunca se verifica que la persona haciendo la petición sea la misma persona que había 
+pedido prestado el libro entonces hay que verificar si existe un movimiento con ese Lector y con ese Libro agregando un metodo
+al repocitorio que verifique si existe un movimiento con ese Lector y con ese Libro en caso que no exista bloquea el acceso

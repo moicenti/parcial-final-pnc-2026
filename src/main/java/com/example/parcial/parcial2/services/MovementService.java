@@ -51,7 +51,11 @@ public class MovementService {
                 book.setAvailable(false);
             }
         } else {
+            if (!movementRepository.existsByLectorAndBook(lector, book)) {
+                throw new RuntimeException("No hay registros de este libro con este lector");
+            }
             book.setAvailableCount(book.getAvailableCount() + 1);
+            book.setAvailable(true);
         }
 
         bookRepository.save(book);
